@@ -65,5 +65,6 @@ Features
 Todo
 ----
 
+* Give option to also give "more translations"
 * Give option to return/print Unicode code.
-* A more rigorous test of all the different options.
+* More rigorously test of all the different options.
