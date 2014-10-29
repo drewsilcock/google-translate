@@ -19,7 +19,7 @@ languages = ["Afrikaans", "Albanian", "Arabic", "Armenian", "Azerbaijani",
              "Zulu"]
 
 
-def get_webpage(url, verbose):
+def get_webpage(url, verbose, debug):
     """ Queries Google for the web page containing the translation. """
 
     chrome_user_agent = """\
@@ -88,27 +88,23 @@ def print_langs(ctx, param, value):
     ctx.exit()
 
 
-@click.command()
-@click.argument("phrase")
-@click.option("-f", "--from", "_from", default="English",
-              help="The language to translate from.")
-@click.option("-t", "--to",
-              prompt="Please enter the language you'd like to translate to",
-              help="The language to translate to.")
-@click.option("-l", "--languages", is_flag=True, callback=print_langs,
-              expose_value=False, is_eager=True, default=False)
-@click.option("-v", "--verbose", is_flag=True)
-@click.option("-d", "--debug", is_flag=True
-def translate(phrase, _from, to, verbose, debug):
+def translate(phrase, to, _from=None, verbose=False, debug=False):
     """ Translate words from one language to another using Google Translate."""
 
-    _from = _from.lower().capitalize()
     to = to.lower().capitalize()
+    if _from:
+        _from = _from.lower().capitalize()
 
-    if _from not in languages or to not in languages:
-        print "Error: language {} not supported. See `translate.py --langs`"
-        print "       for all supported languages."
+    if to not in languages:
+        print "Error: language {} not supported.".format(to)
+        print "See `translate.py --langs` for all supported languages."
         exit(1)
+
+    if _from:
+        if _from not in languages:
+            print "Error: language {} not supported.".format(_from)
+            print "See `translate.py --langs` for all supported languages."
+            exit(1)
 
     if not _from:
         if verbose:
@@ -123,9 +119,9 @@ def translate(phrase, _from, to, verbose, debug):
 
     url = "https://google.co.uk/search?q=" + query
 
-    text = get_webpage(url, verbose)
+    text = get_webpage(url, verbose, debug)
 
-    translation, romanisation = parse_page(text, verbose, debug)
+    translation, romanisation = parse_page(text, verbose)
 
     print "Translation:", translation
     if romanisation:
@@ -134,5 +130,24 @@ def translate(phrase, _from, to, verbose, debug):
     return translation
 
 
+@click.command()
+@click.argument("phrase")
+@click.option("-t", "--to",
+              prompt="Please enter the language you'd like to translate to",
+              help="The language to translate to.")
+@click.option("-f", "--from", "_from", default="English",
+              help="The language to translate from.")
+@click.option("-l", "--languages", is_flag=True, callback=print_langs,
+              expose_value=False, is_eager=True, default=False)
+@click.option("-v", "--verbose", is_flag=True)
+@click.option("-d", "--debug", is_flag=True)
+def main(phrase, to, _from, verbose, debug):
+    """ The main function that controls the command-line interface. """
+
+    translate(phrase, to, _from, verbose, debug)
+
+    return True
+
+
 if __name__ == "__main__":
-    translate()
+    main()
