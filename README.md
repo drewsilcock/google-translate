@@ -11,6 +11,19 @@ Motivation
 
 The Google Translate API is a paid service, but you can easily use Google to translate your phrases without using the API. This is exactly what this does.
 
+Installation
+------------
+
+It uses standard Python distribution utilities, so it's as simple as doing this:
+
+```bash
+$ git clone https://github.com/drewsberry/google-translate.git
+
+$ cd google-translate
+
+$ python setup.py install
+```
+
 Usage
 -----
 
