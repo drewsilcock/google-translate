@@ -88,6 +88,14 @@ def print_langs(ctx, param, value):
     ctx.exit()
 
 
+def print_version(ctx, param, value):
+    if not value or ctx.resilient_parsing:
+        return
+    version = 1.0
+    click.echo("Currently version {}".format(version))
+    ctx.exit()
+
+
 def translate(phrase, to, _from=None, verbose=False, debug=False):
     """ Translate words from one language to another using Google Translate."""
 
@@ -138,6 +146,8 @@ def translate(phrase, to, _from=None, verbose=False, debug=False):
 @click.option("-f", "--from", "_from", default="English",
               help="The language to translate from.")
 @click.option("-l", "--languages", is_flag=True, callback=print_langs,
+              expose_value=False, is_eager=True, default=False)
+@click.option("-V", "--version", is_flag=True, callback=print_version,
               expose_value=False, is_eager=True, default=False)
 @click.option("-v", "--verbose", is_flag=True)
 @click.option("-d", "--debug", is_flag=True)
