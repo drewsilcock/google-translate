@@ -47,6 +47,15 @@ You could also use it as part of another Python program:
 >>> translate(my_phrase, from_lang, to_lang)
 ```
 
+How It Works
+------------
+
+Essentially, this program does two things:
+
+* Uses `urllib2` to make a connection to Google and requests the page corresponding to the query giving the translation we want, spoofing the Chrome browser user agent; and
+* Uses Beautiful Soup to parse the resulting HTML and identify the elements that are always used to contain the translation, then extracts them.
+
+It's basically a very simple web scraper.
 
 Features
 --------
